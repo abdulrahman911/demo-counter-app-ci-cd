@@ -51,6 +51,7 @@ pipeline {
                 script{
 
                     def readPomVersion = readMavenPom file: 'pom.xml'
+                    def nexusRepo = readPomVersion.version.endsWith("SNAPSHOT") ? "shopping-app-snapshot" : "shopping-app-club"
                     nexusArtifactUploader artifacts: [
                         [artifactId: 'springboot', 
                         classifier: '', file: 'target/Uber.jar', 
@@ -58,7 +59,9 @@ pipeline {
                         ], 
                         credentialsId: 'nexus-auth', groupId: 'com.example', 
                         nexusUrl: '65.0.178.225:8081', nexusVersion: 'nexus3', 
-                        protocol: 'http', repository: 'shopping-app-club', 
+                        protocol: 'http', 
+                        // repository: 'shopping-app-club', 
+                        repository: nexusRepo,
                         version: "${readPomVersion.version}"
                 }
             }
